@@ -1,0 +1,38 @@
+<mat-card class="post" *ngIf="allPost" >
+    <div *ngIf="!allPost.isApproved" style="background-color: aqua;">
+        <h3>Please wait for approvel proccess..</h3>
+    </div>
+
+    <div>
+        <div class="post-title">
+            <img class="user-image" src="../../../../../assets/img/user.png" alt="" />
+            <span class="post-author">{{allPost.fullName}}</span>
+            <span class="post-date">Posted on {{allPost.publishedDate | date: 'yyyy-mm-dd h:m'}}</span>
+
+        </div>
+        <h1>{{allPost.title}}</h1>
+
+
+        <div *ngIf="allPost.images.length>0" class="post-image-container">
+            <div *ngFor="let item of allPost.images" >
+                <img [src]="item" alt="" class="create-post-img">
+            </div>
+        </div>
+        
+        <div>
+            <div>
+                
+                <p class="truncate 
+                hover:whitespace-normal" >{{allPost.description}}</p>
+                <p class="post-description"></p>
+            </div>
+            <div class="button-post">
+                
+                <button mat-raised-button (click)="Donate()" >
+                    Donate
+                    <i class="fa fa-credit-card" style="margin-left: 10px;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</mat-card>

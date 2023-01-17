@@ -1,0 +1,248 @@
+
+<mat-drawer-container class="example-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side" opened>
+      
+      <div class="sideNev-content" *ngIf="LogedStatus">
+        
+        <div class="user-image-con">
+          <img class="user-image" src="../../../../../assets/img/user.png" alt="" />
+        
+        </div>
+  
+      <div class="body-content">
+        <span  class="all-post" >
+          {{LogedUserName}}
+        </span>
+        <button mat-raised-button color="warn" (click)="LogOut()">
+          Sign Out
+          <i class="fa fa-sign-out" style="margin-left: 10px;"></i>
+        </button>
+      </div>
+  
+      <div class="all-body">
+        <div>
+          <!-- <button mat-raised-button (click)="EditProfile()" class="side-button"> 
+            Edit Profile
+            <i class="fa fa-plus-square-o" style="margin-left: 10px;"></i>
+          </button> -->
+  
+          
+  
+        </div>
+        <div class="mt-5">
+          <button mat-raised-button (click)="CreateNewPost()" class="side-button"> 
+            Create Post
+            <i class="fa fa-plus-square-o" style="margin-left: 10px;"></i>
+          </button>
+        </div>
+  
+        <div class="mt-5">
+          <button mat-raised-button (click)="MyPostButtton()" class="side-button"> 
+            My Post 
+            <i class="fa fa-user" style="margin-left: 10px;"></i>
+          </button>
+        </div>
+  
+        <div class="mt-5">
+          <button mat-raised-button (click)="AllPostButtton()" class="side-button"> All Post 
+            <i class="fa fa-list" style="margin-left: 10px;"></i>
+  
+          </button>
+        </div>
+  
+      </div>
+      </div>
+  
+      <div class="sideNev-content" *ngIf="!LogedStatus">
+        <div class="body-content">
+          <button mat-raised-button color="primary" (click)="Login()">
+            Login
+          <i class="fa fa-sign-in" style="margin-left: 10px;"></i>
+          </button>
+  
+          
+          
+        </div>
+      </div>
+  
+    </mat-drawer>
+  
+    <div class="example-sidenav-content">
+  
+      <button mat-icon-button color="primary" (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+  
+      <div *ngIf="CreatePostKey && LogedStatus" class="new-post post-mb">
+        <mat-card style="padding: 20px;">
+          <div class="header">
+            <P style="font-size: large;"> SHARE NEW POST</P>
+          </div>
+          <form (ngSubmit)="onCreatePost()" name="signUpForm" [formGroup]="createPostForm">
+            
+            <div class="InputDiv">
+              <mat-form-field class="input-field" appearance="outline">
+                <mat-label>Title</mat-label>
+                <input
+                  class="input-post"
+                  formControlName="title"
+                  matInput
+                  placeholder="Title" required
+                />
+                <mat-error *ngIf="!createPostForm.controls['title'].valid">
+                    Title is required
+                  </mat-error>
+              </mat-form-field>
+            </div>
+  
+            <div class="InputDiv">
+              <mat-form-field class="input-field" appearance="outline">
+                <mat-label>Description</mat-label>
+                <input
+                  formControlName="description"
+                  matInput
+                  placeholder="Description" required
+                />
+                <mat-error *ngIf="!createPostForm.controls['description'].valid">
+                    Description is required
+                  </mat-error>
+              </mat-form-field>
+            </div>
+  
+            
+  
+            <div class="InputDiv">
+                <input 
+                  type="file"
+                  class="img-inpt"
+                  (change)="onSelectImage($event)"
+                  
+                />
+            </div>
+  
+            <div *ngIf="imageArray.length>0" class="post-image-container">
+              <div *ngFor="let item of imageArray" >
+                  <img [src]="item" alt="" class="create-post-img">
+              </div>
+            </div>
+  
+            <button 
+              mat-flat-button 
+              style="margin-left:20px; background-color: rgb(240, 21, 21);margin-top: 20px;"
+              (click)="canselSharePost()">
+              CANCEL
+              <i class="fa fa-remove" style="margin-left: 10px;"></i>
+            </button>
+  
+            <button mat-flat-button style="margin-left:20px; background-color: rgb(66, 96, 231);margin-top: 20px;">
+              SHARE POST
+              <i class="fa fa-plus-square" style="margin-left: 10px;"></i>
+            </button>
+  
+          </form>
+        </mat-card>
+  
+        
+      
+      </div>
+      
+  
+      <div *ngIf="DisplayAllPost">
+          <mat-grid-list *ngFor="let allPost of api[0].data"
+              gutterSize="1"
+              [cols]="1"
+              rowHeight="350">
+            <mat-grid-tile> <app-post [allPost]="allPost"></app-post> </mat-grid-tile>
+          </mat-grid-list>
+      </div>
+  
+      <div *ngIf="MyPost">
+        <mat-grid-list *ngFor="let allPost of apiMy[0].data"
+            gutterSize="1"
+            [cols]="1"
+            rowHeight="350">
+          <mat-grid-tile> <app-post [allPost]="allPost"></app-post> </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+  
+      <div *ngIf="EditMyProfile" class="new-post post-mb">
+        <mat-card >
+          <div class="header">
+            <P style="font-size: large;"> Edit My Profile</P>
+          </div>
+          <form (ngSubmit)="onCreatePost()" name="signUpForm" [formGroup]="createPostForm">
+  
+            <div class="post-image-container">
+              <img class="user-image create-post-img" [src]="src" alt="" />
+            </div>
+  
+            <div class="InputDiv">
+              <mat-form-field class="input-field" appearance="outline">
+                <mat-label>Title</mat-label>
+                <input
+                  class="input-post"
+                  formControlName="title"
+                  matInput
+                  placeholder="Title" required
+                />
+                <mat-error *ngIf="!createPostForm.controls['title'].valid">
+                    Title is required
+                  </mat-error>
+              </mat-form-field>
+            </div>
+  
+            <div class="InputDiv">
+              <mat-form-field class="input-field" appearance="outline">
+                <mat-label>Description</mat-label>
+                <input
+                  formControlName="description"
+                  matInput
+                  placeholder="Description" required
+                />
+                <mat-error *ngIf="!createPostForm.controls['description'].valid">
+                    Description is required
+                  </mat-error>
+              </mat-form-field>
+            </div>
+  
+            
+  
+            <div class="InputDiv">
+                <input 
+                  type="file"
+                  class="img-inpt"
+                  (change)="onSelectProfileImage($event)"
+                  
+                />
+            </div>
+  
+            <div *ngIf="imageArray.length>0" class="post-image-container">
+              <div *ngFor="let item of imageArray" >
+                  <img [src]="item" alt="" class="create-post-img">
+              </div>
+            </div>
+  
+            <button 
+              mat-flat-button 
+              style="margin-left:20px; background-color: rgb(240, 21, 21);margin-top: 20px;"
+              (click)="canselSharePost()">
+              CANCEL
+              <i class="fa fa-remove" style="margin-left: 10px;"></i>
+            </button>
+  
+            <button mat-flat-button style="margin-left:20px; background-color: rgb(66, 96, 231);margin-top: 20px;">
+              SHARE POST
+              <i class="fa fa-plus-square" style="margin-left: 10px;"></i>
+            </button>
+  
+          </form>
+        </mat-card>
+    </div>
+  
+    </div>
+  
+  </mat-drawer-container>
+  
+  
+  
+    

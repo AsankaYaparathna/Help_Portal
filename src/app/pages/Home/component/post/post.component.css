@@ -1,0 +1,42 @@
+.post{
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+}
+.post-description{
+   
+    justify-content: center;
+}
+.post-image{
+    width: auto;
+    height: auto;
+    padding: 10px;
+    
+}
+.post-image-container{
+    display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: center;
+}
+.user-image{
+    width: 40px;
+}
+
+.post-author{
+    margin-right: 450px;
+    margin-top: 10px;
+}
+
+.post-title{
+    display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+.create-post-img{
+    width: 200px;
+    height: auto;
+    padding: 10px;
+}
+.button-post{
+    float: right;
+}
